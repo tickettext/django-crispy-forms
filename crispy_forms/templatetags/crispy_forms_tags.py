@@ -18,7 +18,7 @@ TEMPLATE_PACK = getattr(settings, 'CRISPY_TEMPLATE_PACK', 'bootstrap')
 ALLOWED_TEMPLATE_PACKS = getattr(
     settings,
     'CRISPY_ALLOWED_TEMPLATE_PACKS',
-    ('bootstrap', 'uni_form', 'bootstrap3')
+    ('bootstrap', 'uni_form', 'bootstrap3','semanticui')
 )
 
 
