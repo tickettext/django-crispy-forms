@@ -351,6 +351,7 @@ class FormHelper(DynamicLayoutHandler):
             try:
                 items['label_size'] = int(label_size_match.groups()[0])
                 items['bootstrap_device_type'] = device_type_match.groups()[0]
+                #ADD SEMANTIC UI's FLUID CLASS SETTING ?
             except:
                 pass
 

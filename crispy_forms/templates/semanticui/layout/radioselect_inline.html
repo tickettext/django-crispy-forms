@@ -5,10 +5,15 @@
 
         {% if field.label %}
             <label for="{{ field.auto_id }}"  class="control-label {{ label_class }}{% if field.field.required %} requiredField{% endif %}">
-                {{ field.label|safe }}{% if field.field.required %}<span class="asteriskField">*</span>{% endif %}
+                {{ field.label|safe }}
             </label>
+            {% if field.field.required %}
+				<div class="ui corner label">
+					<i class="icon asterisk"></i>
+				</div>
+			{% endif %}
         {% endif %}
 
-        {% include 'bootstrap3/layout/radioselect.html' %}
+        {% include 'semanticui/layout/radioselect.html' %}
     </div>
 {% endif %}
