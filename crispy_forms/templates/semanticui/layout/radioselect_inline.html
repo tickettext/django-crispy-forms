@@ -4,14 +4,16 @@
     <div id="div_{{ field.auto_id }}" class="form-group{% if wrapper_class %} {{ wrapper_class }}{% endif %}{% if form_show_errors and field.errors %} has-error{% endif %}{% if field.css_classes %} {{ field.css_classes }}{% endif %}">
 
         {% if field.label %}
-            <label for="{{ field.auto_id }}"  class="control-label {{ label_class }}{% if field.field.required %} requiredField{% endif %}">
+            <label for="{{ field.auto_id }}"  class="control-label {{ label_class }}{% if field.field.required %} required {% endif %}">
                 {{ field.label|safe }}
             </label>
+	    {% comment %}
             {% if field.field.required %}
-				<div class="ui corner label">
-					<i class="icon asterisk"></i>
-				</div>
-			{% endif %}
+	    	<div class="ui corner label">
+	    	<i class="icon asterisk"></i>
+		</div>
+	    {% endif %}
+	    {% endcomment %}
         {% endif %}
 
         {% include 'semanticui/layout/radioselect.html' %}

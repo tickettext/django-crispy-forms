@@ -18,6 +18,11 @@
 
     {% if not field|is_checkbox %}
         {% crispy_field field %}
+        {% if field.field.required %}
+		<div class="ui corner label">
+			<i class="icon asterisk"></i>
+		</div>
+	    {% endif %}
     {% endif %}
 
     {% if field.label %}

@@ -4,27 +4,18 @@
 	{{ field }}
 {% else %}
     {% if field|is_checkbox %}
-        <div id="div_{{ field.auto_id }}" class="ui checkbox">
+        <div id="div_{{ field.auto_id }}" class="checkbox">
             <label for="{{ field.id_for_label }}" class="">
                 {% crispy_field field 'class' 'checkbox' %}
                 {{ field.label|safe }}
-            </label>
-	    {% if field.field.required %}
-		<div class="ui corner label">
-			<i class="icon asterisk"></i>
-		</div>
-	    {% endif %}
+		<i class="icon asterisk"></i>
+            </label>	    
         </div>
     {% else %}
-        <div id="div_{{ field.auto_id }}" class="form-group">
-            <label for="{{ field.id_for_label }}" class="sr-only">
+        <div id="div_{{ field.auto_id }}" class="">
+            <label for="{{ field.id_for_label }}" class="">
                 {{ field.label|safe }}
             </label>
-	    {% if field.field.required %}
-		<div class="ui corner label">
-			<i class="icon asterisk"></i>
-		</div>
-	    {% endif %}
             {% crispy_field field 'placeholder' field.label %}
         </div>
     {% endif %}

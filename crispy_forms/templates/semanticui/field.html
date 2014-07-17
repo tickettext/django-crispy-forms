@@ -3,51 +3,39 @@
 {% if field.is_hidden %}
 	{{ field }}
 {% else %}
-    {% if field|is_checkbox %}
-        <div class="field">
-        {% if label_class %}
-            <div class="ui input {{ field_class }}">
-        {% endif %}
-    {% endif %}
-	<{% if tag %}{{ tag }}{% else %}div{% endif %} id="div_{{ field.auto_id }}" {% if not field|is_checkbox %}class="field{% else %}class="ui checkbox{% endif %}{% if wrapper_class %} {{ wrapper_class }}{% endif %}{% if form_show_errors%}{% if field.errors %} has-error{% endif %}{% endif %}{% if field.css_classes %} {{ field.css_classes }}{% endif %}">
+	<{% if tag %}{{ tag }}{% else %}div{% endif %} id="div_{{ field.auto_id }}" {% if not field|is_checkbox %}class="field{% else %}class="checkbox{% endif %}{% if wrapper_class %} {{ wrapper_class }}{% endif %}{% if form_show_errors%}{% if field.errors %} has-error{% endif %}{% endif %}{% if field.css_classes %} {{ field.css_classes }}{% endif %}">
 		{% if field.label and not field|is_checkbox and form_show_labels %}
-			<label for="{{ field.id_for_label }}" class="{{ label_class }}{% if field.field.required %} requiredField{% endif %}">
+			<label for="{{ field.id_for_label }}" class="{{ label_class }}">
 				{{ field.label|safe }}	
-			</label>
-			{% if field.field.required %}
-				<div class="ui corner label">
-					<i class="icon asterisk"></i>
-				</div>
-			{% endif %}
+			</label>		
 		{% endif %}
 
         {% if field|is_checkboxselectmultiple %}
             {% include 'semanticui/layout/checkboxselectmultiple.html' %}
+	    {% if field.field.required %}<span class="asteriskField">*</span>{% endif %}
         {% endif %}
 
         {% if field|is_radioselect %}
             {% include 'semanticui/layout/radioselect.html' %}
+	    {% if field.field.required %}<span class="asteriskField">*</span>{% endif %}
+	    
         {% endif %}
 
         {% if not field|is_checkboxselectmultiple and not field|is_radioselect %}
             {% if field|is_checkbox and form_show_labels %}
-                <label for="{{ field.id_for_label }}" class="{% if field.field.required %} requiredField{% endif %}">
+                <label for="{{ field.id_for_label }}">
                     {% crispy_field field %}
-                    {{ field.label|safe }}
+		    {% if field.field.required %}<span class="asteriskField">*</span>{% endif %}
                     {% include 'semanticui/layout/help_text_and_errors.html' %}
                 </label>
+		
             {% else %}
-                <div class="ui input {{ field_class }}">
+                <div class="{{ field_class }}">
                     {% crispy_field field %}
+		    
                     {% include 'semanticui/layout/help_text_and_errors.html' %}
                 </div>
             {% endif %}
         {% endif %}
 	</{% if tag %}{{ tag }}{% else %}div{% endif %}>
-    {% if field|is_checkbox %}
-        {% if label_class %}
-            </div>
-        {% endif %}
-        </div>
-    {% endif %}
 {% endif %}
