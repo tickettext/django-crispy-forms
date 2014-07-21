@@ -12,19 +12,17 @@
 
         {% if field|is_checkboxselectmultiple %}
             {% include 'semanticui/layout/checkboxselectmultiple.html' %}
-	    {% if field.field.required %}<span class="asteriskField">*</span>{% endif %}
-        {% endif %}
+	    {% endif %}
 
         {% if field|is_radioselect %}
             {% include 'semanticui/layout/radioselect.html' %}
-	    {% if field.field.required %}<span class="asteriskField">*</span>{% endif %}
-	    
         {% endif %}
 
         {% if not field|is_checkboxselectmultiple and not field|is_radioselect %}
             {% if field|is_checkbox and form_show_labels %}
                 <label for="{{ field.id_for_label }}">
                     {% crispy_field field %}
+                    {{ field.label|safe }}
 		    {% if field.field.required %}<span class="asteriskField">*</span>{% endif %}
                     {% include 'semanticui/layout/help_text_and_errors.html' %}
                 </label>
@@ -32,7 +30,6 @@
             {% else %}
                 <div class="{{ field_class }}">
                     {% crispy_field field %}
-		    
                     {% include 'semanticui/layout/help_text_and_errors.html' %}
                 </div>
             {% endif %}
