@@ -5,7 +5,7 @@ from django.template.loader import render_to_string
 from django.template.defaultfilters import slugify
 
 from .compatibility import text_type
-from .layout import LayoutObject, Field, Div
+from .layout import LayoutObject, Field, Div, Button
 from .utils import render_field, flatatt, TEMPLATE_PACK
 
 
@@ -43,6 +43,34 @@ class TwoFields(LayoutObject):
 
     def flat_attrs(self):
         return flatatt(self.attrs)
+
+class ButtonAppendedIcon(Div):
+    template = "%s/appended_icon.html"
+
+    def __init__(self, *fields, **kwargs):
+        self.fields = list(fields)
+
+        if hasattr(self, 'css_class') and 'css_class' in kwargs or hasattr(self, 'icon_class') and 'icon_class' in kwargs:
+            self.css_class += ' %s' % kwargs.pop('css_class')
+            self.icon_class += ' %s' % kwargs.pop('icon_class')
+        if not hasattr(self, 'css_class'):
+            self.css_class = kwargs.pop('css_class', None)
+            self.icon_class = kwargs.pop('icon_class', None)
+
+        self.css_id = kwargs.pop('css_id', '')
+        self.button_text = kwargs.pop('button_text', '')
+        self.template = kwargs.pop('template', self.template)
+        self.flat_attrs = flatatt(kwargs)
+
+    def render(self, form, form_style, context, template_pack=TEMPLATE_PACK, **kwargs):
+        fields = ''
+        for field in self.fields:
+            fields += render_field(
+                field, form, form_style, context, template_pack=template_pack, **kwargs
+            )
+
+        template = self.template % template_pack
+        return render_to_string(template, {'icon_appended': self, 'fields': fields})
 
 
 
