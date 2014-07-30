@@ -1,9 +1,5 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title></title>
-</head>
-<body>
-
-</body>
-</html>
+<button {% if icon_appended.css_id %}id="{{ icon_appended.css_id }}"{% endif %}
+     {% if icon_appended.css_class %}class="ui button icon {{ icon_appended.css_class }}"{% endif %} {{ icon_appended.flat_attrs|safe }}>
+    {{ icon_appended.button_text }}
+    <i class="icon {{ icon_appended.icon_class }}"></i>
+</button>
