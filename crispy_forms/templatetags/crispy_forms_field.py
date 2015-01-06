@@ -6,6 +6,7 @@ except ImportError:
 from django import forms
 from django import template
 from django.template import loader, Context
+from django.template.defaultfilters import safe
 from django.conf import settings
 
 from crispy_forms.utils import TEMPLATE_PACK
@@ -24,6 +25,9 @@ class_converter.update(getattr(settings, 'CRISPY_CLASS_CONVERTERS', {}))
 def is_checkbox(field):
     return isinstance(field.field.widget, forms.CheckboxInput)
 
+@register.filter
+def is_text(field):
+    return isinstance(field.field.widget, forms.TextInput)
 
 @register.filter
 def is_password(field):
@@ -77,6 +81,7 @@ class CrispyFieldNode(template.Node):
         self.field = field
         self.attrs = attrs
         self.html5_required = 'html5_required'
+        self.html5_placeholder = 'html5_placeholder'
 
     def render(self, context):
         # Nodes are not threadsafe so we must store and look up our instance
@@ -85,10 +90,11 @@ class CrispyFieldNode(template.Node):
             context.render_context[self] = (
                 template.Variable(self.field),
                 self.attrs,
-                template.Variable(self.html5_required)
+                template.Variable(self.html5_required),
+                template.Variable(self.html5_placeholder)
             )
 
-        field, attrs, html5_required = context.render_context[self]
+        field, attrs, html5_required, html5_placeholder = context.render_context[self]
         field = field.resolve(context)
         try:
             html5_required = html5_required.resolve(context)
@@ -126,6 +132,11 @@ class CrispyFieldNode(template.Node):
             if html5_required and field.field.required and 'required' not in widget.attrs:
                 if field.field.widget.__class__.__name__ is not 'RadioSelect':
                     widget.attrs['required'] = 'required'
+
+            if html5_placeholder:
+                if field.field.widget.__class__.__name__ in ['TextInput','PasswordInput']:
+                    widget.attrs['placeholder'] = safe(field.label)
+
 
             for attribute_name, attribute in attr.items():
                 attribute_name = template.Variable(attribute_name).resolve(context)

@@ -197,6 +197,7 @@ class FormHelper(DynamicLayoutHandler):
     _help_text_inline = False
     _error_text_inline = True
     html5_required = False
+    html5_placeholder = False
     form_show_labels = True
     template = None
     field_template = None
@@ -340,6 +341,7 @@ class FormHelper(DynamicLayoutHandler):
         items['help_text_inline'] = self.help_text_inline
         items['error_text_inline'] = self.error_text_inline
         items['html5_required'] = self.html5_required
+        items['html5_placeholder'] = self.html5_placeholder
         items['form_show_labels'] = self.form_show_labels
         items['disable_csrf'] = self.disable_csrf
         items['label_class'] = self.label_class

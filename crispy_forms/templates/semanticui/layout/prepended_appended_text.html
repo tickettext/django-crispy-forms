@@ -5,7 +5,7 @@
 {% else %}
     <div id="div_{{ field.auto_id }}" class="field{% if form_show_errors and field.errors %} has-error{% endif %}{% if field.css_classes %} {{ field.css_classes }}{% endif %}">
 
-        {% if field.label and form_show_labels %}
+        {% if field.label and form_show_labels and not html5_placeholder  %}
             <label for="{{ field.id_for_label }}" class="control-label {{ label_class }}">
                 {{ field.label|safe }}
             </label>
@@ -17,21 +17,19 @@
             
             {% crispy_field field %}
             {% if field.field.required %}
-		<div class="ui corner label">
-		    <i class="icon asterisk"></i>
-		</div>
-	    {% endif %}
+                <div class="ui corner label">
+                    <i class="icon asterisk"></i>
+                </div>
+	        {% endif %}
             
           {% else %}
             <div class="ui input">
-                
                 {% crispy_field field %}
                 {% if field.field.required %}
-		<div class="ui corner label">
-		    <i class="icon asterisk"></i>
-		</div>
-	    {% endif %}
-                
+                    <div class="ui corner label">
+                        <i class="icon asterisk"></i>
+                    </div>
+	            {% endif %}
             </div>
           {% endif %}
 
