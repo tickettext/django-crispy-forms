@@ -101,6 +101,11 @@ class CrispyFieldNode(template.Node):
         except template.VariableDoesNotExist:
             html5_required = False
 
+        try:
+            html5_placeholder = html5_placeholder.resolve(context)
+        except template.VariableDoesNotExist:
+            html5_placeholder = False
+
         # If template pack has been overriden in FormHelper we can pick it from context
         template_pack = context.get('template_pack', TEMPLATE_PACK)
 
