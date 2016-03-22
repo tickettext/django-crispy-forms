@@ -1,3 +1,4 @@
+import django
 from django import forms
 from django.db import models
 
@@ -31,42 +32,42 @@ class TestForm2(TestForm):
 
 class CheckboxesTestForm(forms.Form):
     checkboxes = forms.MultipleChoiceField(
-        choices = (
+        choices=(
             (1, "Option one"),
             (2, "Option two"),
             (3, "Option three")
         ),
-        initial = (1,),
-        widget = forms.CheckboxSelectMultiple,
+        initial=(1,),
+        widget=forms.CheckboxSelectMultiple,
     )
 
     alphacheckboxes = forms.MultipleChoiceField(
-        choices = (
+        choices=(
             ('option_one', "Option one"),
             ('option_two', "Option two"),
             ('option_three', "Option three")
         ),
-        initial = ('option_two', 'option_three'),
-        widget = forms.CheckboxSelectMultiple,
+        initial=('option_two', 'option_three'),
+        widget=forms.CheckboxSelectMultiple,
     )
 
     numeric_multiple_checkboxes = forms.MultipleChoiceField(
-        choices = (
+        choices=(
             (1, "Option one"),
             (2, "Option two"),
             (3, "Option three")
         ),
-        initial = (1, 2),
-        widget = forms.CheckboxSelectMultiple,
+        initial=(1, 2),
+        widget=forms.CheckboxSelectMultiple,
     )
 
     inline_radios = forms.ChoiceField(
-        choices = (
+        choices=(
             ('option_one', "Option one"),
             ('option_two', "Option two"),
         ),
-        widget = forms.RadioSelect,
-        initial = 'option_two',
+        widget=forms.RadioSelect,
+        initial='option_two',
     )
 
 
@@ -88,7 +89,15 @@ class TestForm3(forms.ModelForm):
 
 class TestForm4(forms.ModelForm):
     class Meta:
+        """
+        before Django1.6, one cannot use __all__ shortcut for fields
+        without getting the following error:
+        django.core.exceptions.FieldError: Unknown field(s) (a, l, _) specified for CrispyTestModel
+        because obviously it casts the string to a set
+        """
         model = CrispyTestModel
+        if django.VERSION >= (1, 6):
+            fields = '__all__'  # eliminate RemovedInDjango18Warning
 
 
 class TestForm5(forms.Form):
@@ -106,3 +115,9 @@ class TestForm5(forms.Form):
         choices=choices
     )
     pk = forms.IntegerField()
+
+
+class TestFormWithMedia(forms.Form):
+    class Media:
+        css = {'all': ('test.css',)}
+        js = ('test.js',)

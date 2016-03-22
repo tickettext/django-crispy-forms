@@ -1,14 +1,3 @@
-def from_iterable(iterables):
-    """
-    Backport of `itertools.chain.from_iterable` compatible with Python 2.5
-    """
-    for it in iterables:
-        for element in it:
-            if isinstance(element, dict):
-                for key in element:
-                    yield key
-            else:
-                yield element
 
 
 class KeepContext(object):
@@ -30,4 +19,5 @@ class KeepContext(object):
 
     def __exit__(self, type, value, traceback):
         for key in list(self.keys):
-            del self.context[key]
+            if key in self.context:
+                del self.context[key]

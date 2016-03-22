@@ -23,7 +23,13 @@ tempfile
 
 # coverage 
 .coverage
+htmlcov
 _build
 
 # OSX
 *.DS_Store
+
+# editors
+.project
+.pydevproject
+.settings/

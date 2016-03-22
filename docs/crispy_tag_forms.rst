@@ -4,7 +4,7 @@
 {% crispy %} tag with forms
 ===========================
 
-django-crispy-forms implements a class called ``FormHelper`` that defines the form rendering behavior. Helpers give you a way to control form attributes and its layout, doing this in a programatic way using Python. This way you write as little HTML as possible, and all your logic stays in the forms and views files.
+django-crispy-forms implements a class called ``FormHelper`` that defines the form rendering behavior. Helpers give you a way to control form attributes and its layout, doing this in a programmatic way using Python. This way you write as little HTML as possible, and all your logic stays in the forms and views files.
 
 Fundamentals
 ~~~~~~~~~~~~
@@ -50,7 +50,7 @@ Let's see how helpers works step by step, with some examples explained. First yo
 Your helper can be a class level variable or an instance level variable, if you don't know what this means you might want to read the article "`Be careful how you use static variables in forms`_". As a rule of thumb, if you are not going to manipulate a `FormHelper` in your code, like in a view, you should be using a static helper, otherwise you should be using an instance level helper. If you still don't understand the subtle differences between both, use an instance level helper, because you won't end up suffering side effects. As in the next steps I will show you how to manipulate the form helper, so we will create an instance level helper. This is how you would do it::
 
     from crispy_forms.helper import FormHelper
-    
+
     class ExampleForm(forms.Form):
         [...]
         def __init__(self, *args, **kwargs):
@@ -76,7 +76,7 @@ As you can see you need to call the base class constructor using ``super`` and o
 
 Note that we are importing a class called ``Submit`` that is a layout object. We will see what layout objects are in detail later on, for now on let's just say that this adds a submit button to our form, so people can send their survey.
 
-We've also done some helper magic. ``FormHelper`` has a list of attributes that can be set, that affect mainly form attributes. Our form will have as DOM id ``id-exampleForm``, it will have as DOM CSS class ``blueForms``, it will use http ``POST`` to send information and its action will be set to ``reverse(submit_survey)``. 
+We've also done some helper magic. ``FormHelper`` has a list of attributes that can be set, that affect mainly form attributes. Our form will have as DOM id ``id-exampleForm``, it will have as DOM CSS class ``blueForms``, it will use http ``POST`` to send information and its action will be set to ``reverse(submit_survey)``.
 
 Let's see how to render the form in a template. Supposing we have the form in the template context as ``example_form``, we would render it doing::
 
@@ -127,17 +127,17 @@ This is exactly the html that you would get::
 What you'll get is the form rendered as HTML with awesome bits. Specifically...
 
  * Opening and closing form tags, with id, class, action and method set as in the helper::
-    
+
     <form action="/submit/survey/" class="uniForm blueForms" method="post" id="id-exampleForm">
         [...]
     </form>
-    
+
  * Django's CSRF controls::
- 
+
     <div style='display:none'>
         <input type='hidden' name='csrfmiddlewaretoken' value='a643fab735d5ce6377ff456e73c4b1af' />
     </div>
- 
+
  * Submit button::
 
     <div class="buttonHolder">
@@ -159,16 +159,16 @@ Let's see how we could change any helper property in a view::
 
         # Form handling logic
         [...]
- 
+
         if redirect_url is not None:
             example_form.helper.form_action = reverse('submit_survey') + '?next=' + redirectUrl
-        
+
         return render_to_response(template_name, {'example_form': example_form}, context_instance=RequestContext(request))
 
 We are changing ``form_action`` helper property in case the view was called with a ``next`` GET parameter.
 
 
-Rendering several forms with helpers 
+Rendering several forms with helpers
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Often we get asked: "How do you render two or more forms, with their respective helpers, using ``{% crispy %}`` tag, without having ``<form>`` tags rendered twice?" Easy, you need to set ``form_tag`` helper property to ``False`` in every helper::
@@ -177,7 +177,7 @@ Often we get asked: "How do you render two or more forms, with their respective 
 
 Then you will have to write a little of html code surrounding the forms::
 
-    <form action="{% url submit_survey %}" class="uniForm" method="post">
+    <form action="{% url 'submit_survey' %}" class="uniForm" method="post">
         {% crispy first_form %}
         {% crispy second_form %}
     </form>
@@ -222,7 +222,7 @@ For example this setting would generate ``<input class"textinput inputtext" ...`
 Render a form within Python code
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Sometimes, it might be useful to render a form using crispy-forms within Python code, like a Django view, for that there is a nice helper ``render_crispy_form``. The prototype of the method is ``render_crispy_form(form, helper=None, context=None)``. You can use it like this.
+Sometimes, it might be useful to render a form using crispy-forms within Python code, like a Django view, for that there is a nice helper ``render_crispy_form``. The prototype of the method is ``render_crispy_form(form, helper=None, context=None)``. You can use it like this. Remember to pass your CSRF token to the helper method using the context dictionary if you want the rendered form to be able to submit.
 
 
 AJAX validation recipe
@@ -232,18 +232,31 @@ One easy way to validate a crispy-form through AJAX and re-render the resulting 
 
 Our server side code could be::
 
-    @jsonview
+    from crispy_forms.utils import render_crispy_form
+
+    @json_view
     def save_example_form(request):
-        form = ExampleForm(request.POST or None) 
+        form = ExampleForm(request.POST or None)
         if form.is_valid():
             # You could actually save through AJAX and return a success code here
             form.save()
             return {'success': True}
 
-        form_html = render_crispy_form(form)
+        # RequestContext ensures CSRF token is placed in newly rendered form_html
+        request_context = RequestContext(request)
+        form_html = render_crispy_form(form, context=request_context)
         return {'success': False, 'form_html': form_html}
 
-I'm using a jsonview decorator from `django-jsonview`_. In our client side using jQuery would look like::
+I'm using a jsonview decorator from `django-jsonview`_.
+
+Note that in Django versions 1.8 and onwards, using ``RequestContext`` in this way will not work. Instead you can provide ``render_crispy_form`` with the necessary CSRF token with the following code
+
+    from django.core.context_processors import csrf
+    ctx = {}
+    ctx.update(csrf(request))
+    form_html = render_crispy_form(form, context=ctx)
+
+In our client side using jQuery would look like::
 
     var example_form = '#example-form';
 

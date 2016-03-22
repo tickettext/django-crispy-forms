@@ -44,9 +44,11 @@ Since version 1.1.0, django-crispy-forms has built-in support for different CSS 
 
 If your form CSS framework is not supported and it's open source, you can create a template pack for it and submit a pull request in Github or create a ``crispy-forms-templatePackName`` project and let me know, so I can link it.
 
-You can set your default template pack for your project using ``CRISPY_TEMPLATE_PACK`` Django settings variable, setting it to one of the previous keywords::
+You can set your default template pack for your project using the ``CRISPY_TEMPLATE_PACK`` Django settings variable::
 
     CRISPY_TEMPLATE_PACK = 'uni_form'
+
+Please check the documentation of your template pack package for the correct value of the ``CRISPY_TEMPLATE_PACK`` setting (there are packages which provide more than one template pack).
 
 .. _`Bootstrap`: http://twitter.github.com/bootstrap/index.html
 .. _`Foundation`: http://foundation.zurb.com/
@@ -62,7 +64,7 @@ Moving from django-uni-form to django-crispy-forms
 
 django-crispy-forms was started as a friendly fork of django-uni-form. We are aware that a name change implies some hassle updating imports and templates, here is some help mitigating it. This is what you should replace when upgrading:
 
-1. Your ``ÌNSTALLED_APPS`` should point to ``crispy_forms`` instead of ``uni_form``
+1. Your ``INSTALLED_APPS`` should point to ``crispy_forms`` instead of ``uni_form``
 
 2. All imports have to be done from crispy forms::
 
@@ -98,7 +100,7 @@ Using rpl::
     rpl -R "|as_uni_errors" "|as_crispy_errors" .
     rpl -R "|as_uni_field" "|as_crispy_field" .
 
-There is one filter that has been turned into a tag for extra layout power, so former filter name will not work. You will only need to update this if you have custom or overriden templates in your project::
+There is one filter that has been turned into a tag for extra layout power, so former filter name will not work. You will only need to update this if you have custom or overridden templates in your project::
 
     field|with_class ------> {% crispy_field field %}
 
