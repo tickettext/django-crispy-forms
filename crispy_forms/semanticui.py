@@ -39,7 +39,8 @@ class TwoFields(LayoutObject):
             'fields_output': html
         }
         template = self.template % template_pack
-        return render_to_string(template, extra_context, context)
+        return render_to_string(template, extra_context,
+                                request=getattr(context, 'request', None))
 
     def flat_attrs(self):
         return flatatt(self.attrs)
@@ -146,7 +147,8 @@ class FormActions(LayoutObject):
             'fields_output': html
         }
         template = self.template % template_pack
-        return render_to_string(template, extra_context, context)
+        return render_to_string(template, extra_context,
+                                request=getattr(context, 'request', None))
 
     def flat_attrs(self):
         return flatatt(self.attrs)
@@ -206,7 +208,7 @@ class Modal(Div):
         return render_to_string(
             template,
             {'alert': self, 'content': self.content, 'dismiss': self.dismiss},
-            context
+            request=getattr(context, 'request', None)
         )
 
 
@@ -233,5 +235,5 @@ class Dimmer(Div):
         return render_to_string(
             template,
             {'alert': self, 'content': self.content, 'dismiss': self.dismiss},
-            context
+            request=getattr(context, 'request', None)
         )
